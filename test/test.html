@@ -1,0 +1,81 @@
+<html>
+<head>
+<title>PCSS - test</title>
+<script>
+const tests = [ 'remarks', 'variables', 'nesting', 'includes', 'media', 'mixins'];
+</script>
+<style>
+body {
+  display: grid;
+  grid-template-columns: 8em 1fr;
+  height: 100%; margin: 0;
+}
+.toc {
+  overflow: auto;
+  color: black;
+}
+.toc li:before { content: ''; margin-left:-0.6em; }
+.toc li { padding-left: 0.5em; list-style-type: square; cursor: pointer; }
+.toc li.success { color: #319026; }
+.toc li.failure { color: #be3d3d; }
+.toc li.selected { background-color: #eee; }
+.output {
+  position: relative;
+  overflow: hidden;
+}
+iframe {
+  position: absolute;
+  left:0; top: 0; width: 100%; height: 100%; border-width: 1px;
+  visibility: hidden;
+}
+iframe.selected { visibility: visible; }
+</style>
+<script>
+const $query = (path, context) => document.querySelector(path, context);
+const $queryAll = (path, context) => Array.from(document.querySelectorAll(path, context));
+const $select = node => { if(node) Array.from(node.parentElement.children).forEach(child => child.classList.toggle('selected', child === node)); };
+const selectItem = target => {
+    const item = target.nodeName === 'LI' ? target : $query('li', target);
+    if(!item) return;
+    const iframe = $query('#' + `test-${item.getAttribute('id')}`);
+    $select(iframe);
+    $select(item);
+};
+
+window.addEventListener('load',() => {
+  $query('.toc').addEventListener('click', evt => selectItem(evt.target));
+
+  tests.forEach(name => {
+    const label = document.createElement('li');
+    label.innerText = name;
+    label.setAttribute('id', name);
+    $query('.toc').appendChild(label);
+
+    const iframe = document.createElement('iframe');
+    iframe.setAttribute('src', `test-${name}.html`);
+    iframe.setAttribute('id', `test-${name}`);
+    $query('.output').appendChild(iframe);
+
+    if(label.parentElement.childElementCount === 1) selectItem(label);
+  });
+});
+window.addEventListener('message', evt => {
+  const id = evt.data.name.replace(/^test-/, '');
+  const ok = evt.data.ok;
+  const label = document.querySelector('#' + id);
+  if(label) label.classList.toggle('success', !!ok);
+  if(label) label.classList.toggle('failure', !ok);
+  if(!ok) selectItem(label);
+}, false);
+
+</script>
+</head>
+
+<body>
+
+<div class="toc"></div>
+<div class="output"></div>
+
+</body>
+
+</html>

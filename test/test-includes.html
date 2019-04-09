@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>PCSS - test</title>
+
+
+  <style type="text/scss" remark="actually type=text/pcss but (ide-)editor cannot always be configured for it. pcss supports both.">
+    // This test will fail if running from file://
+    @import "to-import.css";
+    @import "to-import.ncss";
+    .panel {
+      color: blue;
+    }
+  </style>
+
+
+  <style type="text/css-expected">
+    @import "to-import.css";
+    .ncss.imported .by .ncss { color: green; }
+    .panel { color: blue; }
+  </style>
+
+
+  <script>pcssNode = document.querySelector('style[type="text/scss"]');</script>
+  <script src="../pscss.js"></script>
+  <script src="test.js"></script>
+</head>
+</html>

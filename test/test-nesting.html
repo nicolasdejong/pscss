@@ -1,0 +1,73 @@
+<html>
+<head>
+  <title>PCSS - test - nesting</title>
+
+
+  <style type="text/scss" remark="actually type=text/pcss but (ide-)editor cannot always be configured for it. pcss supports both.">
+    .panel {
+      height: 12px;
+      color: green;
+      .button {
+        color: blue;
+        &:before { content: $some-text; }
+        &:after { content: '}"' }
+        &.disabled {
+          &.in-orange { color: orange; }
+          color: gray;
+        }
+      }
+    }
+    /* ' */.this-will-be-missing { color:blue; }/* ' missing due to simplistic tokenization: quoted is removed */
+    /* " */.existing { color: red; }
+    /* " */
+    // single line comment
+    // .foo { color: yellow }
+    input.form-control {
+        &[type=number],
+        &[type=text] {
+          color: red;
+        }
+    }
+    #main {
+      width: 97%;
+
+      p, div {
+        font-size: 2em;
+        a { font-weight: bold; }
+      }
+
+      pre { font-size: 3em; }
+    }
+    a {
+      font-weight: bold;
+      text-decoration: none;
+      &:hover { text-decoration: underline; }
+      body.firefox & { font-weight: normal; }
+    }
+  </style>
+
+
+  <style type="text/css-expected">
+    .panel { height: 12px; color: green; }
+    .panel .button { color: blue; }
+    .panel .button:before { content: var(--some-text); }
+    .panel .button:after { content: '}"'; }
+    .panel .button.disabled { color: gray; }
+    .panel .button.disabled.in-orange { color: orange; }
+    .existing { color: red; }
+    input.form-control[type=number], input.form-control[type=text] { color: red; }
+    #main { width: 97%; }
+    #main p, #main div { font-size: 2em; }
+    #main p a, #main div a { font-weight: bold; }
+    #main pre { font-size: 3em; }
+    a { font-weight: bold; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    body.firefox a { font-weight: normal; }
+  </style>
+
+
+  <script>pcssNode = document.querySelector('style[type="text/scss"]');</script>
+  <script src="../pscss.js"></script>
+  <script src="test.js"></script>
+</head>
+</html>
