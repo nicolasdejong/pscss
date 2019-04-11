@@ -6,15 +6,17 @@ instead of a server build to generate the css.
 
 Load this script in the HEAD section and conversion is automatic. No build required.
 
+`<script src="https://nicolasdejong.github.io/pscss/pscss-1_min.js">`
+
 #### How to use
 
   `<link type="text/pscss" href="your-styles.pscss" rel="stylesheet">`<br>
 or<br>
   `<style type="text/pscss">.your.inline.ncss {}</style>`
 
-and load this script: `<script src="pscss-1-min.js"></script>` somewhere in head.
+and load the above mentioned `pscss-1_min.js` script somewhere in head.
 
-**Note:** Using "filename.scss" and type="text/scss" is supported as well for better ide/editor support.
+**Note:** Using "filename.scss" and type="text/scss" (so `scss` instead of `pscss`) is supported as well for better ide/editor support.
 
 
 #### Features
@@ -30,9 +32,10 @@ and load this script: `<script src="pscss-1-min.js"></script>` somewhere in head
 - basic scss @mixin with args but without logic or maps. Use @include to use mixin.
 - pscss.js script loading can be anywhere in HEAD (so not only at end of head as with ncss)
 - flags can be given in the script tag:
-  - 'expose' flag attribute that exposes extra converter and function plugins, and pscss to css conversion function
-  - 'watch' flag attribute that watches for DOM changes for new pscss LINK or SCRIPT nodes after loading.
-  - 'files' attribute to load one or more pscss resources (instead of multiple LINKs)
+  - `expose` flag attribute that exposes extra converter and function plugins, and pscss to css conversion function
+  - `watch` flag attribute that watches for DOM changes for new pscss LINK or SCRIPT nodes after loading.
+  - `files` attribute to load one or more pscss resources (instead of multiple LINKs)
+  - `nc` to support nested multiline comments
 - runtime support, if 'expose' flag is given, exposes a global 'pscss' variable containing:
   - ```convertToCss(pcssText: string): string```
   - ```converters[]: (pcss: string, quotes:string[], vars:{string:string}, mixins:{string:string}) => string```
@@ -46,13 +49,13 @@ and load this script: `<script src="pscss-1-min.js"></script>` somewhere in head
 
 See the [scss reference](https://sass-lang.com/documentation/file.SASS_REFERENCE.html) for more info on how to use the scss features supported here.
 
-See the [tests](test/test.html) for examples of the above scss features.
+See the [tests](https://nicolasdejong.github.io/pscss/test/test.html) for examples of the above scss features.
 
 #### Examples
 
 Add pscss script, expose pscss variable and include more scss:
 
-```<script src="pscss-1.min.js" expose files="a.scss, b.scss, c.scss">```
+```<script src="pscss-1.min.js" files="a.scss, b.scss, c.scss" expose>```
 
 Using the exposed pscss, do live conversion of a bit of pscss and set/update a variable:
 
@@ -67,9 +70,12 @@ pscss.setVar('panel-color', 'green'); // this will update the DOM wherever this 
 This is a very simple client side css preprocessor with limited functionality.
 The pscss code is kept small by using regex instead of proper tokenization.
 This works quite well, but there are some corner cases where conversion fails.
-That typically happens with unmatched quotes in remarks. See [test](test/test.html) for example.
+That typically happens with unmatched quotes in remarks. See [test](https://nicolasdejong.github.io/pscss/test/test.html) for example.
 
-If all you want is nesting, take a look at ncss. It is a small piece of javascript which generates
+The script uses synchronous loading (which leads to a warning in Chrome) because this way
+the behaviour is the same as with normal css loading, which is synchronous as well.
+
+If all you want is nesting, take a look at [ncss](https://github.com/nicolasdejong/ncss). It is a small piece of javascript which generates
 css from nested css only.
 
 For even more client-side css-preprocessing power, see [postcss](https://github.com/postcss/postcss) or [less](http://lesscss.org/).
